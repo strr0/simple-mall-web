@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     routes: [],
+    mainId: null,
     menuId: null
   },
   mutations: {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     initMenu(state, routes) {
       state.routes = routes
+    },
+    selectMain(state, mainId) {
+      state.mainId = mainId
     },
     selectMenu(state, menuId) {
       state.menuId = menuId

@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <el-aside>
-            <el-menu class="el-menu-vertical-demo" router>
+            <el-menu class="el-menu-vertical-demo" @select="handleSelect" router>
                 <tree-menu v-for="menu in menus" :key="menu.id" :item="menu" />
             </el-menu>
         </el-aside>
@@ -18,12 +18,17 @@ export default {
     name: 'Main',
     computed: {
         menus() {
-            let menuId = this.$store.state.menuId
+            let mainId = this.$store.state.mainId
             let routes = this.$store.state.routes
-            if (menuId < routes.length) {
-                return routes[menuId].children
+            if (mainId < routes.length) {
+                return routes[mainId].children
             }
             return []
+        }
+    },
+    methods: {
+        handleSelect(key) {
+            this.$store.commit('selectMenu', key)
         }
     },
     components: {

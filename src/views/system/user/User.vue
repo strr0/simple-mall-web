@@ -6,10 +6,9 @@
                 <el-button type="primary" icon="el-icon-search">搜索</el-button>
             </div>
             <div>
-                <el-button type="primary" icon="el-icon-view" @click="show">查看</el-button>
-                <el-button type="success" icon="el-icon-plus" @click="add">添加</el-button>
-                <el-button type="warning" icon="el-icon-edit" @click="edit">编辑</el-button>
-                <el-button type="danger" icon="el-icon-delete" @click="del">删除</el-button>
+                <el-button v-for="item in btnList" :key="item.id" :type="item.type" :icon="item.icon" @click="handler(item.func)">
+                    {{ item.name }}
+                </el-button>
             </div>
         </div>
         <!--  用户列表  -->
@@ -146,6 +145,7 @@ export default {
             page: 0,
             size: 10,
             total: 0,
+            btnList: [],
             userList: [],
             roleList: [],
             title: '',
@@ -177,16 +177,28 @@ export default {
         }
     },
     mounted() {
+        this.initBtn()
         this.initUser()
         this.initRole()
     },
     methods: {
+        handler(func) {
+            this[func]()
+        },
         selectCurrentRow(val) {
             this.currentRow = val
         },
         pageChange(page) {
             this.page = page - 1
             this.initUser();
+        },
+        initBtn() {
+            let menuId = this.$store.state.menuId
+            this.getRequest('/system/authority/getBtns?menuId=' + menuId).then(resp => {
+                if (resp && resp.success) {
+                    this.btnList = resp.data
+                }
+            })
         },
         initUser() {
             this.loading = true

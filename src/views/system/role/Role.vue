@@ -6,10 +6,9 @@
                 <el-button type="primary" icon="el-icon-search">搜索</el-button>
             </div>
             <div>
-                <el-button type="primary" icon="el-icon-view" @click="show">查看</el-button>
-                <el-button type="success" icon="el-icon-plus" @click="add">添加</el-button>
-                <el-button type="warning" icon="el-icon-edit" @click="edit">编辑</el-button>
-                <el-button type="danger" icon="el-icon-delete" @click="del">删除</el-button>
+                <el-button v-for="item in btnList" :key="item.id" :type="item.type" :icon="item.icon" @click="handler(item.func)">
+                    {{ item.name }}
+                </el-button>
             </div>
         </div>
         <!--  角色列表  -->
@@ -77,6 +76,7 @@ export default {
         return {
             //角色列表
             loading: false,
+            btnList: [],
             roleList: [],
             authorityList: [],
             activeName: -1,
@@ -89,7 +89,7 @@ export default {
                 status: false
             },
             data: [],
-            oldAdis: [],
+            oldAids: [],
             newAids: [],
             rules: {
                 name: [{required: true, message: '请输入角色名称', trigger: 'blur'}],
@@ -98,17 +98,31 @@ export default {
         }
     },
     mounted() {
+        this.initBtn()
         this.initRole()
         this.initAuthority()
     },
     methods: {
+        handler(func) {
+            this[func]()
+        },
         handleCurrentChange(rid) {
             this.data = []
-            this.getRequest('/system/role/listRelByRid?rid=' + rid).then(resp => {
+            if (typeof rid == 'number') {
+                this.getRequest('/system/role/listRelByRid?rid=' + rid).then(resp => {
+                    if (resp && resp.success) {
+                        this.data = this.authorityList
+                        this.newAids = resp.data
+                        this.oldAids = resp.data
+                    }
+                })
+            }
+        },
+        initBtn() {
+            let menuId = this.$store.state.menuId
+            this.getRequest('/system/authority/getBtns?menuId=' + menuId).then(resp => {
                 if (resp && resp.success) {
-                    this.data = this.authorityList
-                    this.newAids = resp.data
-                    this.oldAdis = resp.data
+                    this.btnList = resp.data
                 }
             })
         },
@@ -137,7 +151,7 @@ export default {
                 status: false
             }
             this.newAids = []
-            this.oldAdis = []
+            this.oldAids = []
         },
         save() {
             this.$refs.role.validate(valid => {
@@ -225,7 +239,7 @@ export default {
             let checked = tree.getCheckedKeys()
             let form = {}
             form.rid = rid
-            form.oldAdis = this.oldAdis
+            form.oldAids = this.oldAids
             form.newAids = halfChecked.concat(checked)
             this.postRequest('/system/role/updateRel', form).then(resp => {
                 if(resp && resp.success) {

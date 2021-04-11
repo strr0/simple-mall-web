@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     handleSelect(key) {
-      this.$store.commit('selectMenu', key)
+      this.$store.commit('selectMain', key)
     }
   }
 }
