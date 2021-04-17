@@ -200,8 +200,7 @@ export default {
         },
         initAuthority() {
             this.loading = true
-            var url = '/system/authority/list'
-            this.getRequest(url).then(resp => {
+            this.getRequest('/system/authority/list').then(resp => {
                 this.loading = false
                 if(resp && resp.success) {
                     this.authorityList = resp.data
