@@ -17,7 +17,7 @@
                 <el-collapse-item
                     v-for="(role, index) in roleList"
                     :title="role.name"
-                    :name="role.id"
+                    :name="index"
                     :key="index">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
@@ -106,10 +106,11 @@ export default {
         handler(func) {
             this[func]()
         },
-        handleCurrentChange(rid) {
+        handleCurrentChange(idx) {
             this.data = []
-            if (typeof rid == 'number') {
-                this.getRequest('/system/role/listRelByRid?rid=' + rid).then(resp => {
+            if (typeof idx == 'number') {
+                this.role = this.roleList[idx]
+                this.getRequest('/system/role/listRelByRid?rid=' + this.role.id).then(resp => {
                     if (resp && resp.success) {
                         this.data = this.authorityList
                         this.newAids = resp.data
