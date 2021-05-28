@@ -216,7 +216,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.deleteRequest('/system/role/delete?id=' + this.activeName).then((resp) => {
+                this.deleteRequest('/system/role/delete?id=' + this.role.id).then((resp) => {
                     if (resp) {
                         this.$message({
                             message: '删除成功',
