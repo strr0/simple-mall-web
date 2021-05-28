@@ -200,7 +200,6 @@ export default {
                 return
             }
             this.title = '修改角色信息'
-            this.role.id = this.activeName
             this.editModalVisible = true
         },
         //删除
